@@ -8,23 +8,63 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        
         body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; }
         .gold-text { color: #D4AF37; }
         .gold-bg { background-color: #D4AF37; }
         .logo-font { font-family: 'Cinzel', serif; letter-spacing: 5px; }
-        .product-card { background: linear-gradient(145deg, #121212, #1a1a1a); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 20px; overflow: hidden; }
+        
+        .product-card {
+            background: linear-gradient(145deg, #121212, #1a1a1a);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: #D4AF37;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-glass {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
     </style>
 </head>
 <body>
-    <nav class="p-5 border-b border-yellow-900/20 text-center sticky top-0 bg-black/90 backdrop-blur z-50">
-        <div class="logo-font text-2xl font-bold gold-text">STYLE ZONE</div>
+
+    <nav class="nav-glass sticky top-0 z-50 py-5 px-6 text-center">
+        <div class="logo-font text-3xl font-bold gold-text">STYLE ZONE</div>
     </nav>
 
-    <main class="container mx-auto p-6 min-h-screen">
-        <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <p class="col-span-full text-center py-20 text-gray-500 italic">কালেকশন লোড হচ্ছে...</p>
+    <header class="relative h-[40vh] flex items-center justify-center text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?auto=format&fit=crop&w=1500&q=80');"></div>
+        <div class="relative z-10">
+            <h1 class="text-5xl font-bold mb-2 logo-font">STYLE ZONE</h1>
+            <p class="text-gray-300 italic tracking-widest text-sm uppercase">আপনার আভিজাত্যের নতুন ঠিকানা</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="col-span-full text-center py-20">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-yellow-500 mb-4"></div>
+                <p class="text-gray-500 italic">এক্সক্লুসিভ কালেকশন লোড হচ্ছে...</p>
+            </div>
         </div>
     </main>
+
+    <footer class="bg-[#0a0a0a] py-10 text-center border-t border-gray-900">
+        <div class="logo-font text-xl gold-text mb-2">STYLE ZONE</div>
+        <p class="text-gray-500 text-xs">Premium Quality Menswear</p>
+        <div class="mt-6 flex justify-center gap-6">
+            <a href="https://wa.me/8801976978728" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </footer>
 
     <script>
         const SHEET_ID = '1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo'; 
@@ -34,6 +74,7 @@
             try {
                 const response = await fetch(URL);
                 const text = await response.text();
+                // Google Sheet JSON format cleanup
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 const products = json.table.rows.map(row => ({
                     name: row.c[0]?.v || 'Elite Wear',
@@ -41,20 +82,39 @@
                     image: row.c[2]?.v || '',
                 }));
                 
-                document.getElementById('shop-grid').innerHTML = products.map(p => `
-                    <div class="product-card">
-                        <img src="${p.image}" class="w-full h-96 object-cover" onerror="this.src='https://via.placeholder.com/400x500?text=STYLE+ZONE'">
-                        <div class="p-6 text-center">
-                            <h3 class="text-xl font-bold mb-2">${p.name}</h3>
-                            <p class="gold-text text-2xl font-bold mb-6">৳ ${p.price}</p>
-                            <a href="https://wa.me/8801976978728?text=আমি এই '${p.name}' টি কিনতে চাই।" target="_blank" class="bg-green-600 block py-4 rounded-xl font-bold text-white">হোয়াটসঅ্যাপে অর্ডার</a>
-                        </div>
-                    </div>
-                `).join('');
+                renderProducts(products);
             } catch (e) {
-                document.getElementById('shop-grid').innerHTML = "<p class='col-span-full text-red-500 text-center'>আপনার শিট থেকে তথ্য পাওয়া যাচ্ছে না। দয়া করে শিটটি Publish to web করেছেন কিনা চেক করুন।</p>";
+                document.getElementById('shop-grid').innerHTML = `
+                    <div class='col-span-full text-center py-10'>
+                        <p class='text-red-500'>ডাটা লোড করতে সমস্যা হয়েছে।</p>
+                        <p class='text-xs text-gray-500 mt-2'>দয়া করে শিটটি "Publish to web" করেছেন কি না নিশ্চিত করুন।</p>
+                    </div>`;
             }
         }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('shop-grid');
+            if(products.length === 0) {
+                grid.innerHTML = "<p class='col-span-full text-center text-gray-500'>কোনো প্রোডাক্ট পাওয়া যায়নি।</p>";
+                return;
+            }
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <div class="h-96 overflow-hidden">
+                        <img src="${p.image}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x500?text=Style+Zone'">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">${p.name}</h3>
+                        <p class="gold-text text-2xl font-bold mb-6">৳ ${p.price}</p>
+                        <a href="https://wa.me/8801976978728?text=আসসালামু আলাইকুম, আমি STYLE ZONE থেকে '${p.name}' টি কিনতে চাই।" target="_blank" class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold transition-all active:scale-95">
+                            <i class="fab fa-whatsapp text-xl"></i> অর্ডার করুন
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Start Fetching
         fetchProducts();
     </script>
 </body>
