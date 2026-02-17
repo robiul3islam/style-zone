@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STYLE ZONE | Elite Menswear</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        .gold-text { color: #D4AF37; }
+        .gold-bg { background-color: #D4AF37; }
+        .logo-font { font-family: 'Cinzel', serif; letter-spacing: 5px; }
+        .product-card {
+            background: linear-gradient(145deg, #121212, #1a1a1a);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .product-card:hover { transform: translateY(-15px); border-color: #D4AF37; box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2); }
+        .glass-nav { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+    </style>
+</head>
+<body>
+    <nav class="glass-nav sticky top-0 z-50 py-4 px-6 flex justify-between items-center">
+        <div class="logo-font text-2xl font-bold gold-text">STYLE ZONE</div>
+        <a href="https://docs.google.com/spreadsheets/d/1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo" target="_blank" class="text-xs border border-yellow-800 px-3 py-1 rounded text-gray-400 hover:text-yellow-500 transition">এডিট শিট</a>
+    </nav>
+
+    <header class="relative h-[50vh] flex items-center justify-center text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?auto=format&fit=crop&w=1500&q=80');"></div>
+        <div class="relative z-10" data-aos="zoom-in">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 logo-font">STYLE ZONE</h1>
+            <p class="text-lg text-gray-300 italic">"আপনার আভিজাত্যের নতুন ঠিকানা"</p>
+        </div>
+    </header>
+
+    <section class="py-10 flex justify-center gap-4 sticky top-[72px] z-40 bg-[#050505]/95">
+        <button onclick="filterProducts('All')" class="gold-bg text-black px-6 py-2 rounded-full font-bold text-sm">সব কালেকশন</button>
+        <button onclick="filterProducts('পাঞ্জাবি')" class="border border-gray-700 px-6 py-2 rounded-full font-bold text-sm hover:border-yellow-600 transition">পাঞ্জাবি</button>
+        <button onclick="filterProducts('টি-শার্ট')" class="border border-gray-700 px-6 py-2 rounded-full font-bold text-sm hover:border-yellow-600 transition">টি-শার্ট</button>
+    </section>
+
+    <main class="container mx-auto px-6 pb-24">
+        <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-center">
+            <p class="col-span-full py-20 text-gray-500">প্রোডাক্ট লোড হচ্ছে...</p>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+        const SHEET_ID = '1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo'; 
+        const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        let allProducts = [];
+
+        async function fetchProducts() {
+            try {
+                const response = await fetch(URL);
+                const text = await response.text();
+                const data = JSON.parse(text.substr(47).slice(0, -2));
+                allProducts = data.table.rows.map(row => ({
+                    name: row.c[0] ? row.c[0].v : 'Elite Product',
+                    price: row.c[1] ? row.c[1].v : '0',
+                    image: row.c[2] ? row.c[2].v : '',
+                    category: row.c[3] ? row.c[3].v : 'All'
+                }));
+                renderProducts(allProducts);
+            } catch (err) {
+                document.getElementById('shop-grid').innerHTML = "<p class='col-span-full text-red-500'>ডাটা লোড করতে সমস্যা হয়েছে।</p>";
+            }
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('shop-grid');
+            grid.innerHTML = products.map((p, i) => `
+                <div class="product-card rounded-3xl overflow-hidden" data-aos="fade-up">
+                    <img src="${p.image}" class="w-full h-96 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">${p.name}</h3>
+                        <p class="gold-text text-2xl font-bold mb-6">৳ ${p.price}</p>
+                        <a href="https://wa.me/8801976978728?text=আমি এই '${p.name}' টি অর্ডার করতে চাই।" target="_blank" class="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold transition-all">
+                            <i class="fab fa-whatsapp text-2xl"></i> অর্ডার করুন
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts(cat) {
+            if(cat === 'All') renderProducts(allProducts);
+            else renderProducts(allProducts.filter(p => p.category === cat));
+        }
+        fetchProducts();
+    </script>
+</body>
+</html>
