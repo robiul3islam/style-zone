@@ -1,117 +1,68 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STYLE ZONE | Elite Menswear</title>
+<title>STYLE ZONE</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap');
-
-body { background:#050505; color:#fff; font-family:'Poppins',sans-serif; overflow-x:hidden; }
-.gold-text{ color:#D4AF37 }
-.gold-bg{ background:#D4AF37 }
-.logo-font{ font-family:'Cinzel',serif; letter-spacing:5px }
-
-.product-card{
-background:linear-gradient(145deg,#121212,#1a1a1a);
-transition:.4s;
-border:1px solid rgba(212,175,55,.1)
-}
-.product-card:hover{
-transform:translateY(-12px);
-box-shadow:0 15px 40px rgba(212,175,55,.2);
-border-color:#D4AF37
-}
-
-.glass-nav{
-background:rgba(10,10,10,.8);
-backdrop-filter:blur(15px);
-border-bottom:1px solid rgba(212,175,55,.2)
-}
-
-.loader{
-border:3px solid #1a1a1a;
-border-radius:50%;
-border-top:3px solid #D4AF37;
-width:40px;height:40px;
-animation:spin 1s linear infinite
-}
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+body{background:#0f0f0f;color:white;font-family:sans-serif}
+.gold-text{color:#d4af37}
+.gold-bg{background:#d4af37}
+.product-card{background:#1a1a1a;transition:.4s}
+.product-card:hover{transform:translateY(-10px)}
 </style>
 </head>
+
 <body>
 
-<nav class="glass-nav sticky top-0 z-50 py-4 px-6 flex justify-between items-center">
-<div class="logo-font text-2xl font-bold gold-text">STYLE ZONE</div>
-</nav>
-
-<header class="relative h-[60vh] flex items-center justify-center text-center px-4 overflow-hidden">
-<div class="absolute inset-0 bg-cover bg-center opacity-40 scale-105"
-style="background-image:url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?auto=format&fit=crop&w=1500&q=80')"></div>
-<div class="relative z-10" data-aos="zoom-in">
-<h2 class="text-sm uppercase tracking-[10px] mb-4 text-gray-400">Men's Boutique</h2>
-<h1 class="text-5xl md:text-7xl font-bold mb-6 logo-font">STYLE ZONE</h1>
-<p class="text-lg text-gray-300 italic">"আপনার আভিজাত্যের নতুন ঠিকানা"</p>
-</div>
+<!-- HEADER -->
+<header class="text-center py-10">
+<h1 class="text-4xl font-bold gold-text">STYLE ZONE</h1>
+<p class="text-gray-400 mt-2">Premium Fashion Collection</p>
 </header>
 
-<!-- SEARCH + SORT -->
-<section class="py-6 px-6 bg-[#050505] sticky top-[72px] z-40">
-<div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 justify-between">
+<!-- FILTER + SEARCH -->
+<section class="max-w-6xl mx-auto px-4 mb-10">
 
-<input id="searchInput" type="text"
-placeholder="প্রোডাক্ট খুঁজুন..."
-class="bg-black border border-gray-700 px-4 py-2 rounded-lg w-full md:w-1/3 focus:border-yellow-600 outline-none">
+<div class="flex flex-wrap gap-3 justify-center mb-6">
+<button onclick="filterProducts('All',this)" class="gold-bg text-black px-4 py-2 rounded-full">All</button>
+<button onclick="filterProducts('Men',this)" class="border border-gray-600 px-4 py-2 rounded-full">Men</button>
+<button onclick="filterProducts('Women',this)" class="border border-gray-600 px-4 py-2 rounded-full">Women</button>
+</div>
 
-<select id="sortSelect"
-class="bg-black border border-gray-700 px-4 py-2 rounded-lg focus:border-yellow-600 outline-none">
-<option value="default">Sort By</option>
-<option value="low">Price: Low → High</option>
-<option value="high">Price: High → Low</option>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<input id="searchInput" placeholder="Search product..."
+class="px-4 py-2 rounded-lg text-black w-full md:w-1/3">
+
+<select id="sortSelect" class="px-4 py-2 rounded-lg text-black w-full md:w-1/4">
+<option value="">Sort By</option>
+<option value="low">Price Low to High</option>
+<option value="high">Price High to Low</option>
 </select>
-
 </div>
+
 </section>
 
-<!-- FILTER -->
-<section class="py-6 flex justify-center gap-4 overflow-x-auto px-4">
-<button onclick="filterProducts('All',this)" class="gold-bg text-black px-6 py-2 rounded-full font-bold text-sm">সব</button>
-<button onclick="filterProducts('পাঞ্জাবি',this)" class="border border-gray-700 px-6 py-2 rounded-full text-sm">পাঞ্জাবি</button>
-<button onclick="filterProducts('টি-শার্ট',this)" class="border border-gray-700 px-6 py-2 rounded-full text-sm">টি-শার্ট</button>
-<button onclick="filterProducts('প্যান্ট',this)" class="border border-gray-700 px-6 py-2 rounded-full text-sm">প্যান্ট</button>
+<!-- PRODUCTS -->
+<section class="max-w-6xl mx-auto px-4 pb-20">
+<div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
 </section>
 
-<main class="container mx-auto px-6 pb-24">
-<div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-<div class="col-span-full flex flex-col items-center py-20">
-<div class="loader mb-4"></div>
-<p class="text-gray-500">কালেকশন লোড হচ্ছে...</p>
-</div>
-</div>
-</main>
-
-<footer class="bg-[#0a0a0a] py-12 text-center border-t border-gray-900">
-<div class="logo-font text-2xl gold-text mb-4">STYLE ZONE</div>
-<p class="text-gray-500 text-sm">Premium Quality Guaranteed</p>
-</footer>
-
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-AOS.init({duration:800,once:true});
 
-const SHEET_ID='1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo';
-const URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+/* 🔥 আপনার Google Sheet CSV publish link */
+const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vTIcDibFYdzWDxKHSiwHn0K4Z8A3wTjHQhNSZoVIPe5QnvOCbM0I4xYMUMKRf9V5K-0Pgh4JF4mHW7F/pub?gid=0&single=true&output=csv";
 
 let allProducts=[];
 let currentCategory="All";
 
+/* Fix Google Drive Image */
 function fixImage(url){
-if(!url) return "https://via.placeholder.com/400x500?text=Style+Zone";
+if(!url) return "https://via.placeholder.com/400x500?text=No+Image";
+
 if(url.includes("drive.google.com")){
 let id=url.match(/[-\w]{25,}/);
 if(id) return `https://drive.google.com/uc?export=view&id=${id[0]}`;
@@ -119,44 +70,52 @@ if(id) return `https://drive.google.com/uc?export=view&id=${id[0]}`;
 return url;
 }
 
+/* Fetch Products */
 async function fetchProducts(){
 try{
-const res=await fetch(URL);
+const res=await fetch(CSV_URL);
 const text=await res.text();
-const json=JSON.parse(text.substring(47).slice(0,-2));
 
-allProducts=json.table.rows.map(r=>({
-name:r.c[0]?.v||"Exclusive Product",
-price:parseFloat(r.c[1]?.v)||0,
-image:fixImage(r.c[2]?.v),
-category:r.c[3]?.v||"All"
+const rows=text.trim().split("\n").map(r=>r.split(","));
+rows.shift();
+
+allProducts=rows.map(r=>({
+name:r[0]||"Product",
+price:parseFloat(r[1])||0,
+image:fixImage(r[2]),
+category:r[3]||"All"
 }));
 
 renderProducts(allProducts);
+
 }catch{
 document.getElementById("shop-grid").innerHTML=
-`<p class="col-span-full text-center text-red-500 py-20">
-ডেটা লোড হয়নি! Google Sheet → Publish to web করুন।
+`<p class="text-center text-red-500 col-span-full py-20">
+Sheet publish করা হয়নি অথবা লিংক ভুল।
 </p>`;
 }
 }
 
+/* Render Products */
 function renderProducts(products){
 const grid=document.getElementById("shop-grid");
+
 if(products.length===0){
-grid.innerHTML=`<p class="col-span-full text-center text-gray-500 py-20">কোনো প্রোডাক্ট নেই</p>`;
+grid.innerHTML=`<p class="text-center text-gray-400 col-span-full py-20">
+কোনো প্রোডাক্ট পাওয়া যায়নি
+</p>`;
 return;
 }
 
-grid.innerHTML=products.map((p,i)=>`
-<div class="product-card rounded-3xl overflow-hidden" data-aos="fade-up">
-<div class="h-[450px] overflow-hidden">
+grid.innerHTML=products.map(p=>`
+<div class="product-card rounded-2xl overflow-hidden">
+<div class="h-[400px] overflow-hidden">
 <img src="${p.image}" 
 class="w-full h-full object-cover"
 onerror="this.src='https://via.placeholder.com/400x500?text=Image+Error'">
 </div>
-<div class="p-8 text-center">
-<span class="text-xs text-gray-400">${p.category}</span>
+<div class="p-6 text-center">
+<p class="text-xs text-gray-400">${p.category}</p>
 <h3 class="text-xl mt-2">${p.name}</h3>
 <p class="gold-text text-2xl font-bold mt-2">৳ ${p.price}</p>
 </div>
@@ -164,12 +123,13 @@ onerror="this.src='https://via.placeholder.com/400x500?text=Image+Error'">
 `).join("");
 }
 
+/* Filter */
 function filterProducts(cat,el){
 currentCategory=cat;
 
 document.querySelectorAll("section button").forEach(b=>{
 b.classList.remove("gold-bg","text-black");
-b.classList.add("border","border-gray-700");
+b.classList.add("border","border-gray-600");
 });
 
 el.classList.add("gold-bg","text-black");
@@ -178,6 +138,7 @@ el.classList.remove("border");
 applyFilters();
 }
 
+/* Apply Search + Sort */
 function applyFilters(){
 let filtered=currentCategory==="All"
 ? allProducts
@@ -197,6 +158,8 @@ document.getElementById("searchInput").addEventListener("input",applyFilters);
 document.getElementById("sortSelect").addEventListener("change",applyFilters);
 
 fetchProducts();
+
 </script>
+
 </body>
 </html>
