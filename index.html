@@ -3,197 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STYLE ZONE | Elite Boutique</title>
+    <title>STYLE ZONE | Premium Boutique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap');
-        body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; }
         .gold-text { color: #D4AF37; }
         .gold-bg { background: #D4AF37; color: #000; font-weight: bold; }
         .logo-font { font-family: 'Cinzel', serif; letter-spacing: 4px; }
         
-        /* ছবি জুম এনিমেশন (Mouse Hover Zoom) */
-        .product-card { background: #111; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; transition: 0.4s; overflow: hidden; }
-        .img-container { overflow: hidden; height: 400px; position: relative; }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 0.45, 0.45, 0.95); }
-        .product-card:hover .img-container img { transform: scale(1.2); }
-        .product-card:hover { border-color: #D4AF37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1); }
+        /* ছবি জুম ইফেক্ট */
+        .product-card { background: #111; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; overflow: hidden; transition: 0.4s; }
+        .img-box { overflow: hidden; height: 380px; position: relative; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .product-card:hover .img-box img { transform: scale(1.15); }
 
-        /* বড় ও সুন্দর বাটন */
-        .cat-btn { padding: 15px 35px; font-size: 18px; border-radius: 50px; border: 2px solid #D4AF37; color: #D4AF37; font-weight: bold; transition: 0.3s; }
+        /* বড় ক্যাটাগরি বাটন */
+        .cat-btn { padding: 15px 35px; font-size: 18px; border-radius: 50px; border: 2px solid #D4AF37; color: #D4AF37; font-weight: bold; }
         .cat-btn.active { background: #D4AF37; color: #000; }
 
-        /* আপডেট বড় সার্চ বার */
-        #searchInput { background: #111; border: 2px solid rgba(212, 175, 55, 0.3); padding: 12px 25px; border-radius: 50px; color: white; outline: none; transition: 0.3s; width: 100%; }
-        #searchInput:focus { border-color: #D4AF37; }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal.active { display: flex; }
-        .bill-box { background: white; color: #333; width: 100%; max-width: 450px; border-radius: 15px; border-top: 10px solid #D4AF37; padding: 25px; }
+
+        /* আপনার দেওয়া ছবির মতো বিল ডিজাইন */
+        .bill-paper { background: white; color: #333; width: 100%; max-width: 450px; border-radius: 5px; padding: 30px; border: 2px solid #eee; position: relative; }
+        .bill-header { border-bottom: 2px solid #D4AF37; margin-bottom: 20px; padding-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <nav class="p-6 border-b border-yellow-900/30 bg-black flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="logo-font text-4xl font-bold gold-text">STYLE ZONE</div>
-        
-        <div class="relative w-full md:w-1/2">
-            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="আপনার পছন্দের কালেকশনটি এখানে খুঁজুন...">
-            <i class="fas fa-search absolute right-6 top-4 text-yellow-600"></i>
+        <div class="relative w-full md:w-1/3">
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="প্রোডাক্ট খুঁজুন..." class="w-full bg-[#111] border border-yellow-700/50 p-3 rounded-full text-white outline-none">
         </div>
-
-        <button onclick="adminAccess()" class="gold-bg px-8 py-3 rounded-full uppercase text-sm tracking-widest shadow-xl active:scale-95 transition">
-            <i class="fas fa-lock"></i> Product Manage
-        </button>
+        <button onclick="adminAccess()" class="gold-bg px-8 py-3 rounded-full text-sm uppercase"><i class="fas fa-lock"></i> Manager</button>
     </nav>
 
-    <div class="py-10 flex justify-center gap-4 flex-wrap bg-[#080808]">
+    <div class="py-10 flex justify-center gap-4 flex-wrap">
         <button onclick="filterProducts('All', this)" class="cat-btn active">সব কালেকশন</button>
         <button onclick="filterProducts('পাঞ্জাবি', this)" class="cat-btn">পাঞ্জাবি</button>
-        <button onclick="filterProducts('শার্ট', this)" class="cat-btn">শার্ট</button>
         <button onclick="filterProducts('টি-শার্ট', this)" class="cat-btn">টি-শার্ট</button>
         <button onclick="filterProducts('প্যান্ট', this)" class="cat-btn">প্যান্ট</button>
     </div>
 
-    <main class="container mx-auto px-6 pb-24">
-        <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12"></div>
+    <main class="container mx-auto px-6 pb-20">
+        <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"></div>
     </main>
 
     <div id="orderModal" class="modal">
-        <div id="billSection" class="bill-box relative">
-            <button onclick="closeModal()" class="absolute top-2 right-4 text-3xl text-gray-400">&times;</button>
-            <div class="text-center border-b pb-4 mb-4">
-                <h2 class="text-2xl font-bold text-[#D4AF37] logo-font">STYLE ZONE</h2>
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Premium Invoice</p>
+        <div id="billSection" class="bill-paper">
+            <button onclick="closeModal()" class="absolute top-2 right-4 text-2xl text-gray-400">&times;</button>
+            
+            <div class="bill-header text-center">
+                <h2 class="text-2xl font-bold logo-font text-red-600">Style Zone</h2>
+                <p class="text-sm">Premium Invoice</p>
             </div>
 
-            <form action="https://formspree.io/f/xbdaoazl" method="POST" id="orderForm" class="space-y-3">
+            <form action="https://formspree.io/f/xbdaoazl" method="POST" id="orderForm" class="space-y-4">
                 <input type="hidden" name="Order_Date" id="oDate">
-                
-                <label class="text-xs font-bold">প্রোডাক্ট নাম:</label>
-                <input type="text" name="Product" id="pInp" readonly class="w-full bg-gray-50 p-2 border rounded font-bold text-sm">
+                <input type="text" name="Product" id="pName" readonly class="w-full bg-gray-50 border-none font-bold text-center">
 
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="text" name="Customer" id="cName" placeholder="আপনার নাম" required class="w-full p-2 border rounded text-sm">
-                    <input type="tel" name="Phone" id="cPhone" placeholder="মোবাইল নম্বর" required class="w-full p-2 border rounded text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="Name" id="cName" placeholder="আপনার নাম" required class="p-2 border rounded">
+                    <input type="tel" name="Phone" id="cPhone" placeholder="মোবাইল নম্বর" required class="p-2 border rounded">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <select name="Size" id="pSize" class="w-full p-2 border rounded text-sm"></select>
-                    <select name="Area" id="area" onchange="calcTotal()" class="w-full p-2 border rounded text-sm">
-                        <option value="80">ঢাকা শহর (৳ ৮০)</option>
-                        <option value="100">ঢাকা সাব-এলাকা (৳ ১০০)</option>
+                <div class="grid grid-cols-2 gap-4">
+                    <select name="Size" id="pSize" class="p-2 border rounded"></select>
+                    <select name="Area" id="area" onchange="calc()" class="p-2 border rounded">
+                        <option value="80">ঢাকা (৳ ৮০)</option>
                         <option value="150">ঢাকার বাইরে (৳ ১৫০)</option>
                     </select>
                 </div>
 
-                <textarea name="Address" id="cAddr" placeholder="আপনার বিস্তারিত ঠিকানা" required class="w-full p-2 border rounded text-sm" rows="2"></textarea>
+                <textarea name="Address" id="cAddr" placeholder="বিস্তারিত ঠিকানা" required class="w-full p-2 border rounded" rows="2"></textarea>
 
-                <label class="text-xs font-bold">পেমেন্ট মেথড:</label>
-                <select name="Payment" id="pMethod" class="w-full p-2 border rounded text-sm bg-yellow-50 font-bold">
-                    <option value="Cash on Delivery">Cash on Delivery (মাল পেয়ে টাকা)</option>
-                    <option value="Bkash/Nagad">Bkash/Nagad (অগ্রিম পেমেন্ট)</option>
-                </select>
-
-                <div class="bg-yellow-50 p-4 rounded-lg border-2 border-dashed border-yellow-300">
-                    <div class="flex justify-between font-bold text-lg">
+                <div class="border-t-2 border-red-600 pt-4 mt-4">
+                    <div class="flex justify-between font-bold text-xl">
                         <span>মোট বিল:</span>
                         <span id="fBill" class="text-red-600">৳ ০</span>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full gold-bg py-4 rounded-lg text-lg uppercase shadow-xl hover:scale-[1.02] transition">অর্ডার কনফার্ম করুন</button>
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 gold-bg py-4 rounded font-bold uppercase">ওয়েবসাইটে অর্ডার</button>
+                    <button type="button" onclick="sendWhatsApp()" class="flex-1 bg-green-600 text-white py-4 rounded font-bold uppercase">হোয়াটসঅ্যাপ অর্ডার</button>
+                </div>
             </form>
         </div>
     </div>
 
     <script>
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIcDibFYdzWDxKHSiwHn0K4Z8A3wTjHQhNSZoVIPe5QnvOCbM0I4xYMUMKRf9V5K-0Pgh4JF4mHW7F/pub?gid=0&single=true&output=csv";
-        let items = [];
-        let curPrice = 0;
+        const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIcDibFYdzWDxKHSiwHn0K4Z8A3wTjHQhNSZoVIPe5QnvOCbM0I4xYMUMKRf9V5K-0Pgh4JF4mHW7F/pub?gid=0&single=true&output=csv";
+        let allProds = [];
+        let price = 0;
 
-        async function fetchAll() {
-            const res = await fetch(CSV_URL);
-            const text = await res.text();
-            const rows = text.trim().split("\n").map(r => r.split(","));
-            rows.shift();
-            items = rows.map(r => ({ name: r[0], price: parseInt(r[1]), image: r[2], category: r[3] }));
-            render(items);
+        async function load() {
+            const res = await fetch(CSV);
+            const data = await res.text();
+            const rows = data.split("\n").slice(1);
+            allProds = rows.map(r => {
+                const c = r.split(",");
+                return { name: c[0], price: parseInt(c[1]), img: c[2], cat: c[3] };
+            });
+            render(allProds);
         }
 
-        function render(data) {
-            const grid = document.getElementById('shop-grid');
-            grid.innerHTML = data.map(p => `
+        function render(arr) {
+            document.getElementById('shop-grid').innerHTML = arr.map(p => `
                 <div class="product-card">
-                    <div class="img-container"><img src="${p.image}" onerror="this.src='https://via.placeholder.com/400x500'"></div>
+                    <div class="img-box"><img src="${p.img}"></div>
                     <div class="p-6 text-center">
-                        <h3 class="text-xl font-bold mb-1">${p.name}</h3>
-                        <p class="gold-text text-2xl font-bold mb-6">৳ ${p.price}</p>
-                        <button onclick="openModal('${p.name}', ${p.price}, '${p.category}')" class="gold-bg w-full py-3 rounded-xl uppercase tracking-widest active:scale-95 transition">অর্ডার করুন</button>
+                        <h3 class="text-xl font-bold mb-2">${p.name}</h3>
+                        <p class="gold-text text-2xl font-bold mb-4">৳ ${p.price}</p>
+                        <button onclick="openModal('${p.name}', ${p.price}, '${p.cat}')" class="gold-bg w-full py-3 rounded-xl uppercase">অর্ডার করুন</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function openModal(name, price, cat) {
-            curPrice = price;
-            document.getElementById('pInp').value = name;
+        function openModal(n, p, c) {
+            price = p;
+            document.getElementById('pName').value = n;
             document.getElementById('oDate').value = new Date().toLocaleString();
-            const s = document.getElementById('pSize'); s.innerHTML = "";
-            if(cat === "প্যান্ট") for(let i=27; i<=34; i++) s.innerHTML += `<option>${i}</option>`;
-            else if(cat === "শার্ট" || cat === "টি-শার্ট") ["S", "M", "L", "XL", "XXL"].forEach(v => s.innerHTML += `<option>${v}</option>`);
-            else ["38", "40", "42", "44", "46"].forEach(v => s.innerHTML += `<option>${v}</option>`);
-            calcTotal();
+            const sz = document.getElementById('pSize'); sz.innerHTML = "";
+            if(c === "প্যান্ট") for(let i=27; i<=34; i++) sz.innerHTML += `<option>${i}</option>`;
+            else ["M", "L", "XL", "XXL"].forEach(v => sz.innerHTML += `<option>${v}</option>`);
+            calc();
             document.getElementById('orderModal').classList.add('active');
         }
 
-        function calcTotal() {
+        function calc() {
             const ship = parseInt(document.getElementById('area').value);
-            document.getElementById('fBill').innerText = `৳ ${curPrice + ship}`;
+            document.getElementById('fBill').innerText = `৳ ${price + ship}`;
         }
 
         function closeModal() { document.getElementById('orderModal').classList.remove('active'); }
 
+        // ওয়েবসাইট অর্ডার ও বিল ডাউনলোড
         document.getElementById('orderForm').onsubmit = function(e) {
-            const name = document.getElementById('cName').value;
-            const phone = document.getElementById('cPhone').value;
-            const total = document.getElementById('fBill').innerText;
-            const pay = document.getElementById('pMethod').value;
-
-            // প্রফেশনাল বিল ডাউনলোড
-            html2canvas(document.getElementById('billSection')).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Bill-${name}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-
-            // হোয়াটসঅ্যাপে মেসেজ পাঠানো
-            const msg = `আসসালামু আলাইকুম!\nনতুন অর্ডার:\n----------------\nপ্রোডাক্ট: ${document.getElementById('pInp').value}\nনাম: ${name}\nফোন: ${phone}\nমোট বিল: ${total}\nপেমেন্ট: ${pay}`;
-            setTimeout(() => { window.open(`https://wa.me/8801976978728?text=${encodeURIComponent(msg)}`, '_blank'); }, 1000);
-            
-            // Formspree মেইল পাঠাবে অটোমেটিক্যালি
+            downloadBill();
+            alert("ধন্যবাদ! আপনার অর্ডারটি সফলভাবে আমাদের মেইলে পৌঁছেছে। আমরা দ্রুত যোগাযোগ করবো।");
         };
 
-        function adminAccess() {
-            if(prompt("Admin Password:") === "style123") window.open("https://docs.google.com/spreadsheets/d/1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo/edit", "_blank");
-            else alert("ভুল পাসওয়ার্ড!");
+        function sendWhatsApp() {
+            const n = document.getElementById('cName').value;
+            const ph = document.getElementById('cPhone').value;
+            const pr = document.getElementById('pName').value;
+            const b = document.getElementById('fBill').innerText;
+            if(!n || !ph) return alert("নাম ও ফোন নম্বর দিন!");
+            
+            downloadBill();
+            const msg = `Style Zone - নতুন অর্ডার\nনাম: ${n}\nফোন: ${ph}\nপ্রোডাক্ট: ${pr}\nবিল: ${b}`;
+            window.open(`https://wa.me/8801976978728?text=${encodeURIComponent(msg)}`, '_blank');
+            alert("ধন্যবাদ! আপনার হোয়াটসঅ্যাপ অর্ডারটি প্রসেস করা হচ্ছে।");
+        }
+
+        function downloadBill() {
+            html2canvas(document.getElementById('billSection')).then(canvas => {
+                const a = document.createElement('a');
+                a.download = 'StyleZone-Bill.png';
+                a.href = canvas.toDataURL();
+                a.click();
+            });
         }
 
         function applyFilters() {
             const t = document.getElementById('searchInput').value.toLowerCase();
-            render(items.filter(p => p.name.toLowerCase().includes(t)));
+            render(allProds.filter(p => p.name.toLowerCase().includes(t)));
         }
 
-        function filterProducts(cat, el) {
+        function filterProducts(c, btn) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            render(cat === 'All' ? items : items.filter(p => p.category === cat));
+            btn.classList.add('active');
+            render(c === 'All' ? allProds : allProds.filter(p => p.cat === c));
         }
 
-        fetchAll();
+        function adminAccess() {
+            if(prompt("পাসওয়ার্ড:") === "style123") window.open("https://docs.google.com/spreadsheets/d/1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo/edit", "_blank");
+        }
+
+        load();
     </script>
 </body>
 </html>
