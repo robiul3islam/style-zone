@@ -16,49 +16,137 @@
         .product-card { background: #151515; border: 1px solid rgba(212, 175, 55, 0.1); transition: all 0.5s; border-radius: 20px; overflow: hidden; }
         .product-card:hover { transform: translateY(-10px); border-color: #D4AF37; box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2); }
         
-        /* Modal Style from your file */
+        /* Modal Style */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
         .modal.active { display: flex; }
-        .form-container { max-width: 450px; background: white; width: 100%; padding: 25px; border-radius: 15px; border-top: 5px solid #b8860b; color: #333; position: relative; }
-        .form-container label { font-weight: bold; font-size: 14px; display: block; margin-top: 15px; color: #444; }
-        .form-container input, .form-container select, .form-container textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; color: #000; }
-        .save-btn { width: 100%; background: #b8860b; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 25px; }
-        .whatsapp-btn { background: #25D366; margin-top: 12px; display: block; text-align: center; text-decoration: none; color: white; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; }
+        .form-container { max-width: 450px; background: white; width: 100%; padding: 25px; border-radius: 15px; border-top: 5px solid #b8860b; color: #333; position: relative; max-height: 90vh; overflow-y: auto; }
+        .form-container label { font-weight: bold; font-size: 13px; display: block; margin-top: 10px; color: #444; }
+        .form-container input, .form-container select, .form-container textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; color: #000; outline: none; }
+        .form-container input:focus { border-color: #b8860b; }
+        .save-btn { width: 100%; background: #b8860b; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 17px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .save-btn:hover { background: #946b09; }
+        .whatsapp-btn { background: #25D366; margin-top: 10px; display: block; text-align: center; text-decoration: none; color: white; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; }
+
+        /* Invoice Style */
+        .bill-table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+        .bill-table th, .bill-table td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; font-size: 14px; }
+        
+        .hidden { display: none; }
+        @media print { .no-print { display: none; } #invoice { display: block !important; border: none; } }
     </style>
 </head>
 <body>
 
     <div id="orderModal" class="modal">
-        <div class="form-container">
+        <div class="form-container" id="form-box">
             <button onclick="closeModal()" class="absolute top-2 right-4 text-2xl text-gray-400">&times;</button>
-            <h2 class="text-[#b8860b] text-center text-xl font-bold uppercase">Style Zone</h2>
-            <p class="text-center text-xs text-gray-500 mb-4">নতুন অর্ডার এন্ট্রি ফরম</p>
+            <h2 class="text-[#b8860b] text-center text-xl font-bold uppercase logo-font">Style Zone</h2>
+            <p class="text-center text-xs text-gray-500 mb-4">অর্ডারটি কনফার্ম করুন</p>
             
-            <form action="https://formspree.io/f/xbdaoazl" method="POST" id="orderFormMain">
-                <label>পাঞ্জাবির নাম/কোড:</label>
-                <input type="text" name="Product" id="prodInput" readonly required>
+            <form id="orderFormMain">
+                <label>পণ্যের নাম:</label>
+                <input type="text" id="prodInput" readonly required class="bg-gray-50">
 
-                <label>কাস্টমারের নাম:</label>
-                <input type="text" name="Customer_Name" id="custName" placeholder="নাম লিখুন" required>
+                <label>মূল্য (৳):</label>
+                <input type="text" id="prodPrice" readonly required class="bg-gray-50">
 
-                <label>মোবাইল নম্বর:</label>
-                <input type="tel" name="Phone" id="custPhone" placeholder="০১৭xxxxxxxx" required>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label>কাস্টমারের নাম:</label>
+                        <input type="text" id="custName" placeholder="আপনার নাম" required>
+                    </div>
+                    <div>
+                        <label>মোবাইল নম্বর:</label>
+                        <input type="tel" id="custPhone" placeholder="০১৭xxxxxxxx" required>
+                    </div>
+                </div>
 
-                <label>বিস্তারিত ঠিকানা:</label>
-                <textarea name="Address" id="custAddr" rows="2" placeholder="বাসা, থানা, জেলা" required></textarea>
+                <label>ঠিকানা:</label>
+                <textarea id="custAddr" rows="2" placeholder="ফুল ঠিকানা লিখুন" required></textarea>
 
-                <label>সাইজ:</label>
-                <select name="Size" id="custSize">
-                    <option value="38">38 (S)</option>
-                    <option value="40">40 (M)</option>
-                    <option value="42">42 (L)</option>
-                    <option value="44">44 (XL)</option>
-                    <option value="46">46 (XXL)</option>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label>সাইজ:</label>
+                        <select id="custSize">
+                            <option value="38">38 (S)</option>
+                            <option value="40">40 (M)</option>
+                            <option value="42">42 (L)</option>
+                            <option value="44">44 (XL)</option>
+                            <option value="46">46 (XXL)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>ডেলিভারি এরিয়া:</label>
+                        <select id="deliveryCharge">
+                            <option value="80">ঢাকার ভিতরে (৳৮০)</option>
+                            <option value="150">ঢাকার বাইরে (৳১৫০)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>পেমেন্ট মেথড:</label>
+                <select id="paymentMethod">
+                    <option value="Cash on Delivery">Cash on Delivery</option>
+                    <option value="Bkash">Bkash (বিকাশ)</option>
+                    <option value="Nagad">Nagad (নগদ)</option>
                 </select>
 
-                <button type="submit" class="save-btn shadow-lg">ড্যাশবোর্ডে সেভ করুন</button>
-                <a href="javascript:void(0);" onclick="sendToWhatsApp()" class="whatsapp-btn">সরাসরি হোয়াটসঅ্যাপে পাঠান</a>
+                <button type="button" onclick="generateBill()" class="save-btn shadow-lg">বিল দেখুন ও অর্ডার সম্পন্ন করুন</button>
             </form>
+        </div>
+
+        <div id="invoice" class="form-container hidden">
+            <div class="text-center border-b pb-4">
+                <h1 class="logo-font text-2xl font-bold text-[#b8860b]">STYLE ZONE</h1>
+                <p class="text-[10px] tracking-widest text-gray-500 uppercase">Premium Collection</p>
+            </div>
+            
+            <div class="mt-4 text-xs grid grid-cols-2 gap-2">
+                <div>
+                    <p class="font-bold">বিল টু:</p>
+                    <p id="billCustName"></p>
+                    <p id="billCustPhone"></p>
+                </div>
+                <div class="text-right">
+                    <p><strong>তারিখ:</strong> <span id="billDate"></span></p>
+                    <p><strong>পেমেন্ট:</strong> <span id="billPayMethod"></span></p>
+                </div>
+            </div>
+
+            <table class="bill-table">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th>আইটেম</th>
+                        <th>সাইজ</th>
+                        <th>মূল্য</th>
+                    </tr>
+                </thead>
+                <tbody id="billItems"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" class="text-right py-2">সাব-টোটাল:</td>
+                        <td id="billSubtotal"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-right py-2">ডেলিভারি চার্জ:</td>
+                        <td id="billDelivery"></td>
+                    </tr>
+                    <tr class="font-bold text-[#b8860b] border-t-2">
+                        <td colspan="2" class="text-right py-2">সর্বমোট বিল:</td>
+                        <td id="billTotal"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="mt-4 p-2 bg-yellow-50 rounded text-[10px] text-gray-600">
+                <p><strong>ঠিকানা:</strong> <span id="billCustAddr"></span></p>
+            </div>
+
+            <div class="flex gap-2 mt-6 no-print">
+                <button onclick="sendToWhatsApp()" class="whatsapp-btn flex-1 m-0">WhatsApp-এ পাঠান</button>
+                <button onclick="window.print()" class="bg-gray-800 text-white px-4 rounded-lg"><i class="fas fa-print"></i></button>
+            </div>
+            <button onclick="closeModal()" class="w-full mt-4 text-gray-400 text-xs no-print underline">ফিরে যান</button>
         </div>
     </div>
 
@@ -66,10 +154,10 @@
         <div class="logo-font text-2xl font-bold gold-text cursor-pointer" onclick="location.reload()">STYLE ZONE</div>
         <div class="flex items-center gap-4">
              <div class="relative hidden md:block">
-                <input type="text" id="searchInput" oninput="applyFilters()" placeholder="সার্চ কালেকশন..." class="bg-zinc-900 border border-zinc-800 pl-4 pr-10 py-2 rounded-full text-sm outline-none focus:border-yellow-600 w-48 transition-all">
+                <input type="text" id="searchInput" oninput="applyFilters()" placeholder="সার্চ কালেকশন..." class="bg-zinc-900 border border-zinc-800 pl-4 pr-10 py-2 rounded-full text-sm outline-none focus:border-yellow-600 w-48 transition-all text-white">
                 <i class="fas fa-search absolute right-3 top-2.5 text-gray-500"></i>
              </div>
-             <button onclick="secureManager()" class="text-xs gold-bg px-4 py-2 rounded-full font-bold">প্রোডাক্ট ম্যানেজার</button>
+             <button onclick="secureManager()" class="text-xs gold-bg px-4 py-2 rounded-full font-bold">অ্যাডমিন</button>
         </div>
     </nav>
 
@@ -109,51 +197,82 @@
                 }));
                 renderProducts(allProducts);
             } catch(e) {
-                document.getElementById('shop-grid').innerHTML = "<p class='text-red-500 text-center col-span-full'>শিট পাবলিশ করা নেই।</p>";
+                document.getElementById('shop-grid').innerHTML = "<p class='text-red-500 text-center col-span-full'>শিট লোড হতে সমস্যা হচ্ছে।</p>";
             }
         }
 
         function renderProducts(products) {
             const grid = document.getElementById('shop-grid');
-            grid.innerHTML = products.map((p, i) => `
+            grid.innerHTML = products.length ? products.map((p) => `
                 <div class="product-card" data-aos="fade-up">
                     <img src="${p.image}" class="w-full h-[400px] object-cover" onerror="this.src='https://via.placeholder.com/400x500'">
                     <div class="p-6 text-center">
                         <span class="text-[10px] text-yellow-600 uppercase tracking-widest">${p.category}</span>
                         <h3 class="text-xl font-bold mt-1">${p.name}</h3>
                         <p class="gold-text text-2xl font-bold mb-5">৳ ${p.price}</p>
-                        <button onclick="openModal('${p.name}')" class="gold-bg w-full py-3 rounded-xl font-bold transition active:scale-95">অর্ডার করুন</button>
+                        <button onclick="openModal('${p.name}', '${p.price}')" class="gold-bg w-full py-3 rounded-xl font-bold transition active:scale-95">অর্ডার করুন</button>
                     </div>
                 </div>
-            `).join('');
+            `).join('') : "<p class='col-span-full text-center'>কোনো প্রোডাক্ট পাওয়া যায়নি।</p>";
         }
 
-        function openModal(name) {
+        function openModal(name, price) {
             document.getElementById('prodInput').value = name;
+            document.getElementById('prodPrice').value = price;
             document.getElementById('orderModal').classList.add('active');
+            document.getElementById('form-box').classList.remove('hidden');
+            document.getElementById('invoice').classList.add('hidden');
         }
 
         function closeModal() {
             document.getElementById('orderModal').classList.remove('active');
         }
 
+        function generateBill() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddr').value.trim();
+            const product = document.getElementById('prodInput').value;
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const size = document.getElementById('custSize').value;
+            const delivery = parseFloat(document.getElementById('deliveryCharge').value);
+            const pMethod = document.getElementById('paymentMethod').value;
+
+            if(!name || !phone || !address) { alert("দয়া করে সব তথ্য পূরণ করুন!"); return; }
+
+            // Fill Invoice Details
+            document.getElementById('billDate').innerText = new Date().toLocaleDateString('bn-BD');
+            document.getElementById('billCustName').innerText = name;
+            document.getElementById('billCustPhone').innerText = phone;
+            document.getElementById('billCustAddr').innerText = address;
+            document.getElementById('billPayMethod').innerText = pMethod;
+            document.getElementById('billItems').innerHTML = `<tr><td>${product}</td><td>${size}</td><td>৳${price}</td></tr>`;
+            document.getElementById('billSubtotal').innerText = `৳${price}`;
+            document.getElementById('billDelivery').innerText = `৳${delivery}`;
+            document.getElementById('billTotal').innerText = `৳${price + delivery}`;
+
+            // Toggle view
+            document.getElementById('form-box').classList.add('hidden');
+            document.getElementById('invoice').classList.remove('hidden');
+        }
+
         function sendToWhatsApp() {
             const product = document.getElementById('prodInput').value;
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddr').value;
+            const name = document.getElementById('billCustName').innerText;
+            const phone = document.getElementById('billCustPhone').innerText;
+            const address = document.getElementById('billCustAddr').innerText;
             const size = document.getElementById('custSize').value;
+            const payment = document.getElementById('billPayMethod').innerText;
+            const total = document.getElementById('billTotal').innerText;
 
-            if(!name || !phone || !address) { alert("সব তথ্য পূরণ করুন!"); return; }
-
-            const msg = `Style Zone - নতুন অর্ডার\n\nপাঞ্জাবি: ${product}\nনাম: ${name}\nমোবাইল: ${phone}\nঠিকানা: ${address}\nসাইজ: ${size}`;
+            const msg = `*New Order - Style Zone*\n\n*পণ্য:* ${product}\n*সাইজ:* ${size}\n*নাম:* ${name}\n*মোবাইল:* ${phone}\n*ঠিকানা:* ${address}\n*পেমেন্ট:* ${payment}\n*সর্বমোট বিল:* ${total}`;
             window.open(`https://wa.me/8801976978728?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function secureManager() {
-            if(prompt("পাসওয়ার্ড দিন:") === "style123") {
+            if(prompt("পাসওয়ার্ড দিন:") === "style123") {
                 window.open("https://docs.google.com/spreadsheets/d/1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo/edit", "_blank");
-            } else { alert("ভুল পাসওয়ার্ড!"); }
+            } else { alert("ভুল পাসওয়ার্ড!"); }
         }
 
         function applyFilters() {
