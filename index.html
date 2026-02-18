@@ -19,34 +19,30 @@
         .img-zoom img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
         .product-card:hover .img-zoom img { transform: scale(1.1); }
 
-        /* বড় ক্যাটাগরি বাটন */
-        .cat-btn { padding: 15px 30px; font-size: 18px; border-radius: 50px; border: 1px solid #D4AF37; transition: 0.3s; color: #D4AF37; }
+        .cat-btn { padding: 12px 25px; font-size: 16px; border-radius: 50px; border: 1px solid #D4AF37; color: #D4AF37; font-weight: 600; }
         .cat-btn.active { background: #D4AF37; color: #000; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal.active { display: flex; }
-        
-        /* প্রফেশনাল বিল */
-        .bill-container { background: white; color: #333; width: 100%; max-width: 450px; border-radius: 10px; border-top: 10px solid #D4AF37; padding: 25px; }
-        .unpaid-tag { background: #ff4d4d; color: white; padding: 2px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .bill-container { background: white; color: #333; width: 100%; max-width: 450px; border-radius: 15px; border-top: 8px solid #D4AF37; padding: 25px; }
     </style>
 </head>
 <body>
 
-    <nav class="p-6 border-b border-yellow-900/30 bg-black flex flex-col md:flex-row justify-between items-center gap-4">
+    <nav class="p-6 border-b border-yellow-900/30 bg-black flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="logo-font text-3xl font-bold gold-text">STYLE ZONE</div>
         
-        <div class="relative w-full md:w-1/3">
-            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="এখানে খুঁজুন..." class="w-full bg-[#111] border border-yellow-700/50 p-3 rounded-lg text-white outline-none focus:border-yellow-500">
-            <i class="fas fa-search absolute right-4 top-4 text-yellow-600"></i>
+        <div class="relative w-full md:w-1/2">
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="আপনার পছন্দের কালেকশন খুঁজুন..." class="w-full bg-[#111] border border-yellow-700/50 p-3 pl-5 rounded-full text-white outline-none focus:border-yellow-500">
+            <i class="fas fa-search absolute right-5 top-4 text-yellow-600"></i>
         </div>
 
-        <button onclick="adminAccess()" class="gold-bg px-8 py-3 rounded-lg uppercase tracking-widest hover:scale-105 transition shadow-lg shadow-yellow-600/20">
-            <i class="fas fa-tasks"></i> Product Manage
+        <button onclick="adminAccess()" class="gold-bg px-6 py-2.5 rounded-full uppercase text-sm tracking-widest">
+            <i class="fas fa-lock"></i> Product Manage
         </button>
     </nav>
 
-    <div class="py-10 flex justify-center gap-4 flex-wrap bg-[#080808]">
+    <div class="py-8 flex justify-center gap-3 flex-wrap bg-[#080808]">
         <button onclick="filterProducts('All', this)" class="cat-btn active">সব কালেকশন</button>
         <button onclick="filterProducts('পাঞ্জাবি', this)" class="cat-btn">পাঞ্জাবি</button>
         <button onclick="filterProducts('শার্ট', this)" class="cat-btn">শার্ট</button>
@@ -54,113 +50,102 @@
         <button onclick="filterProducts('প্যান্ট', this)" class="cat-btn">প্যান্ট</button>
     </div>
 
-    <main class="container mx-auto px-6 pb-20">
+    <main class="container mx-auto px-6 pb-24">
         <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"></div>
     </main>
 
     <div id="orderModal" class="modal">
         <div id="billSection" class="bill-container relative">
             <button onclick="closeModal()" class="absolute top-2 right-4 text-2xl text-gray-400">&times;</button>
-            
             <div class="text-center border-b pb-4 mb-4">
                 <h2 class="text-2xl font-bold text-[#D4AF37] logo-font">STYLE ZONE</h2>
-                <p class="text-xs text-gray-500 uppercase">Premium Invoice</p>
-                <div class="mt-2"><span class="unpaid-tag">Status: UNPAID (Cash On Delivery)</span></div>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Premium Invoice</p>
             </div>
 
-            <form action="https://formspree.io/f/xbdaoazl" method="POST" id="orderForm" class="space-y-4">
-                <input type="hidden" name="Order_Date" id="orderDate">
-                
-                <div>
-                    <label class="text-xs font-bold text-gray-600">প্রোডাক্ট নাম:</label>
-                    <input type="text" name="Product" id="prodInput" readonly class="w-full bg-gray-50 p-2 border rounded font-bold">
+            <form action="https://formspree.io/f/xbdaoazl" method="POST" id="orderForm" class="space-y-3">
+                <input type="hidden" name="Date" id="orderDate">
+                <label class="text-xs font-bold">প্রোডাক্ট নাম:</label>
+                <input type="text" name="Product" id="prodInput" readonly class="w-full bg-gray-50 p-2 border rounded font-bold text-sm">
+
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" name="Customer" id="custName" placeholder="আপনার নাম" required class="w-full p-2 border rounded text-sm">
+                    <input type="tel" name="Phone" id="custPhone" placeholder="মোবাইল নম্বর" required class="w-full p-2 border rounded text-sm">
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">আপনার নাম:</label>
-                        <input type="text" name="Customer" id="custName" required class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">ফোন নম্বর:</label>
-                        <input type="tel" name="Phone" id="custPhone" required class="w-full p-2 border rounded">
-                    </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <select name="Size" id="prodSize" class="w-full p-2 border rounded text-sm"></select>
+                    <select name="Area" id="area" onchange="calcBill()" class="w-full p-2 border rounded text-sm">
+                        <option value="80">ঢাকা শহর (৳ ৮০)</option>
+                        <option value="100">সাভার/গাজীপুর/কেরানীগঞ্জ (৳ ১০০)</option>
+                        <option value="150">ঢাকার বাইরে (৳ ১৫০)</option>
+                    </select>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">সাইজ:</label>
-                        <select name="Size" id="prodSize" class="w-full p-2 border rounded"></select>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">এলাকা:</label>
-                        <select id="area" onchange="calcBill()" class="w-full p-2 border rounded">
-                            <option value="80">ঢাকা (৳ ৮০)</option>
-                            <option value="150">ঢাকার বাইরে (৳ ১৫০)</option>
-                        </select>
-                    </div>
-                </div>
+                <textarea name="Address" id="custAddr" placeholder="আপনার বিস্তারিত ঠিকানা" required class="w-full p-2 border rounded text-sm" rows="2"></textarea>
 
-                <div>
-                    <label class="text-xs font-bold text-gray-600">ঠিকানা:</label>
-                    <textarea name="Address" id="custAddr" required class="w-full p-2 border rounded" rows="2"></textarea>
-                </div>
+                <label class="text-xs font-bold">পেমেন্ট মেথড:</label>
+                <select name="Payment" id="payMethod" class="w-full p-2 border rounded text-sm bg-yellow-50 font-bold">
+                    <option value="Cash on Delivery">ক্যাশ অন ডেলিভারি (মাল পেয়ে টাকা)</option>
+                    <option value="Bkash/Nagad">বিকাশ/নগদ (অগ্রিম পেমেন্ট)</option>
+                </select>
 
-                <div class="bg-yellow-50 p-4 rounded-lg border-2 border-dashed border-yellow-300">
+                <div class="bg-yellow-50 p-3 rounded-lg border-2 border-dashed border-yellow-300">
                     <div class="flex justify-between font-bold text-lg">
                         <span>মোট বিল:</span>
                         <span id="finalBill" class="text-red-600">৳ ০</span>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full gold-bg py-4 rounded-lg text-lg uppercase shadow-xl hover:brightness-110">অর্ডার কনফার্ম করুন</button>
+                <button type="submit" class="w-full gold-bg py-3 rounded-lg text-lg uppercase shadow-xl hover:brightness-110">অর্ডার কনফার্ম করুন</button>
             </form>
         </div>
     </div>
 
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIcDibFYdzWDxKHSiwHn0K4Z8A3wTjHQhNSZoVIPe5QnvOCbM0I4xYMUMKRf9V5K-0Pgh4JF4mHW7F/pub?gid=0&single=true&output=csv";
-        let allProducts = [];
-        let itemPrice = 0;
+        let allItems = [];
+        let priceNow = 0;
 
         async function loadData() {
-            const res = await fetch(CSV_URL);
-            const text = await res.text();
-            const rows = text.trim().split("\n").map(r => r.split(","));
-            rows.shift();
-            allProducts = rows.map(r => ({ name: r[0], price: parseInt(r[1]), image: r[2], category: r[3] }));
-            render(allProducts);
+            try {
+                const res = await fetch(CSV_URL);
+                const text = await res.text();
+                const rows = text.trim().split("\n").map(r => r.split(","));
+                rows.shift();
+                allItems = rows.map(r => ({ name: r[0], price: parseInt(r[1]), image: r[2], category: r[3] }));
+                render(allItems);
+            } catch(e) { console.error("Error loading CSV"); }
         }
 
         function render(data) {
             const grid = document.getElementById('shop-grid');
             grid.innerHTML = data.map(p => `
-                <div class="product-card">
-                    <div class="img-zoom"><img src="${p.image}"></div>
+                <div class="product-card" data-aos="fade-up">
+                    <div class="img-zoom"><img src="${p.image}" onerror="this.src='https://via.placeholder.com/400x500'"></div>
                     <div class="p-6 text-center">
-                        <h3 class="text-xl font-bold mb-2">${p.name}</h3>
-                        <p class="gold-text text-2xl font-bold mb-6">৳ ${p.price}</p>
-                        <button onclick="openModal('${p.name}', ${p.price}, '${p.category}')" class="gold-bg w-full py-3 rounded-lg uppercase">অর্ডার করুন</button>
+                        <h3 class="text-lg font-bold mb-1">${p.name}</h3>
+                        <p class="gold-text text-xl font-bold mb-5">৳ ${p.price}</p>
+                        <button onclick="openModal('${p.name}', ${p.price}, '${p.category}')" class="gold-bg w-full py-2.5 rounded-lg uppercase tracking-tighter text-sm">অর্ডার করুন</button>
                     </div>
                 </div>
             `).join('');
         }
 
         function openModal(name, price, cat) {
-            itemPrice = price;
+            priceNow = price;
             document.getElementById('prodInput').value = name;
             document.getElementById('orderDate').value = new Date().toLocaleString();
-            const s = document.getElementById('prodSize');
-            s.innerHTML = "";
-            if(cat === "প্যান্ট") for(let i=27; i<=34; i++) s.innerHTML += `<option>${i}</option>`;
-            else ["S", "M", "L", "XL", "XXL"].forEach(v => s.innerHTML += `<option>${v}</option>`);
+            const sz = document.getElementById('prodSize'); sz.innerHTML = "";
+            if(cat === "প্যান্ট") for(let i=27; i<=34; i++) sz.innerHTML += `<option>${i}</option>`;
+            else if(cat === "শার্ট" || cat === "টি-শার্ট") ["S", "M", "L", "XL", "XXL"].forEach(v => sz.innerHTML += `<option>${v}</option>`);
+            else ["38", "40", "42", "44", "46"].forEach(v => sz.innerHTML += `<option>${v}</option>`);
             calcBill();
             document.getElementById('orderModal').classList.add('active');
         }
 
         function calcBill() {
             const ship = parseInt(document.getElementById('area').value);
-            document.getElementById('finalBill').innerText = `৳ ${itemPrice + ship}`;
+            document.getElementById('finalBill').innerText = `৳ ${priceNow + ship}`;
         }
 
         function closeModal() { document.getElementById('orderModal').classList.remove('active'); }
@@ -170,37 +155,36 @@
             const phone = document.getElementById('custPhone').value;
             const prod = document.getElementById('prodInput').value;
             const total = document.getElementById('finalBill').innerText;
+            const pay = document.getElementById('payMethod').value;
 
-            // বিল ইমেজ জেনারেট এবং ডাউনলোড
             html2canvas(document.getElementById('billSection')).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `StyleZone-Bill-${name}.png`;
+                link.download = `Bill-${name}.png`;
                 link.href = canvas.toDataURL();
                 link.click();
             });
 
-            // হোয়াটসঅ্যাপ মেসেজ
-            const msg = `নতুন অর্ডার!\nনাম: ${name}\nফোন: ${phone}\nপ্রোডাক্ট: ${prod}\nমোট বিল: ${total}`;
+            const msg = `আসসালামু আলাইকুম!\nনতুন অর্ডার:\n----------------\nপ্রোডাক্ট: ${prod}\nনাম: ${name}\nফোন: ${phone}\nমোট বিল: ${total}\nপেমেন্ট: ${pay}`;
             setTimeout(() => {
                 window.open(`https://wa.me/8801976978728?text=${encodeURIComponent(msg)}`, '_blank');
             }, 1000);
         };
 
+        function adminAccess() {
+            if(prompt("Admin Password:") === "style123") {
+                window.open("https://docs.google.com/spreadsheets/d/1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo/edit", "_blank");
+            }
+        }
+
         function applyFilters() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            render(allProducts.filter(p => p.name.toLowerCase().includes(term)));
+            render(allItems.filter(p => p.name.toLowerCase().includes(term)));
         }
 
         function filterProducts(cat, el) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            render(cat === 'All' ? allProducts : allProducts.filter(p => p.category === cat));
-        }
-
-        function adminAccess() {
-            if(prompt("Admin Password:") === "style123") {
-                window.open("https://docs.google.com/spreadsheets/d/1awfRMmH6anDxMXLY4EX89hrXl-UCMVBzTDJ5PrDN6eo/edit", "_blank");
-            }
+            render(cat === 'All' ? allItems : allItems.filter(p => p.category === cat));
         }
 
         loadData();
