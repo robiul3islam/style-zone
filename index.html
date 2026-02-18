@@ -19,15 +19,16 @@
         .img-zoom img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
         .product-card:hover .img-zoom img { transform: scale(1.1); }
 
+        /* বড় ক্যাটাগরি বাটন */
         .cat-btn { padding: 15px 30px; font-size: 18px; border-radius: 50px; border: 1px solid #D4AF37; transition: 0.3s; color: #D4AF37; }
         .cat-btn.active { background: #D4AF37; color: #000; }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal.active { display: flex; }
         
-        /* আপনার রিকোয়েস্ট করা সাদা বিলের ডিজাইন */
-        .bill-container { background: white; color: #000; width: 100%; max-width: 450px; border-radius: 0px; padding: 40px; box-shadow: none; border: 1px solid #eee; }
-        .unpaid-tag { border: 1px solid #000; padding: 2px 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        /* প্রফেশনাল বিল */
+        .bill-container { background: white; color: #333; width: 100%; max-width: 450px; border-radius: 10px; border-top: 10px solid #D4AF37; padding: 25px; }
+        .unpaid-tag { background: #ff4d4d; color: white; padding: 2px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -36,11 +37,11 @@
         <div class="logo-font text-3xl font-bold gold-text">STYLE ZONE</div>
         
         <div class="relative w-full md:w-1/3">
-            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="কাঙ্ক্ষিত প্রোডাক্টটি খুঁজুন..." class="w-full bg-[#111] border border-yellow-700/50 p-3 rounded-full text-white outline-none focus:border-yellow-500 transition-all">
-            <i class="fas fa-search absolute right-5 top-4 text-yellow-600"></i>
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="এখানে খুঁজুন..." class="w-full bg-[#111] border border-yellow-700/50 p-3 rounded-lg text-white outline-none focus:border-yellow-500">
+            <i class="fas fa-search absolute right-4 top-4 text-yellow-600"></i>
         </div>
 
-        <button onclick="adminAccess()" class="gold-bg px-8 py-3 rounded-full uppercase tracking-widest hover:scale-105 transition shadow-lg shadow-yellow-600/20">
+        <button onclick="adminAccess()" class="gold-bg px-8 py-3 rounded-lg uppercase tracking-widest hover:scale-105 transition shadow-lg shadow-yellow-600/20">
             <i class="fas fa-tasks"></i> Product Manage
         </button>
     </nav>
@@ -59,60 +60,60 @@
 
     <div id="orderModal" class="modal">
         <div id="billSection" class="bill-container relative">
-            <button onclick="closeModal()" type="button" class="absolute top-2 right-4 text-2xl text-gray-400">&times;</button>
+            <button onclick="closeModal()" class="absolute top-2 right-4 text-2xl text-gray-400">&times;</button>
             
-            <div class="text-center pb-6 mb-6">
-                <h2 class="text-3xl font-bold logo-font" style="color: #000;">STYLE ZONE</h2>
-                <p class="text-[10px] tracking-[3px] uppercase">Original Invoice</p>
-                <div class="mt-3"><span class="unpaid-tag">Status: Unpaid</span></div>
+            <div class="text-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-[#D4AF37] logo-font">STYLE ZONE</h2>
+                <p class="text-xs text-gray-500 uppercase">Premium Invoice</p>
+                <div class="mt-2"><span class="unpaid-tag">Status: UNPAID (Cash On Delivery)</span></div>
             </div>
 
             <form action="https://formspree.io/f/xbdaoazl" method="POST" id="orderForm" class="space-y-4">
-                <input type="hidden" name="OrderDate" id="orderDate">
+                <input type="hidden" name="Order_Date" id="orderDate">
                 
                 <div>
-                    <label class="text-[10px] font-bold uppercase">Product Name:</label>
-                    <input type="text" name="ProductName" id="prodInput" readonly class="w-full bg-white border-b border-black p-1 font-bold text-sm outline-none">
+                    <label class="text-xs font-bold text-gray-600">প্রোডাক্ট নাম:</label>
+                    <input type="text" name="Product" id="prodInput" readonly class="w-full bg-gray-50 p-2 border rounded font-bold">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-bold uppercase">Customer Name:</label>
-                        <input type="text" name="CustomerName" id="custName" required class="w-full border-b border-gray-300 p-1 text-sm outline-none focus:border-black">
+                        <label class="text-xs font-bold text-gray-600">আপনার নাম:</label>
+                        <input type="text" name="Customer" id="custName" required class="w-full p-2 border rounded">
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold uppercase">Phone Number:</label>
-                        <input type="tel" name="PhoneNumber" id="custPhone" required class="w-full border-b border-gray-300 p-1 text-sm outline-none focus:border-black">
+                        <label class="text-xs font-bold text-gray-600">ফোন নম্বর:</label>
+                        <input type="tel" name="Phone" id="custPhone" required class="w-full p-2 border rounded">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-bold uppercase">Size Selection:</label>
-                        <select name="Size" id="prodSize" class="w-full border-b border-gray-300 p-1 text-sm outline-none focus:border-black"></select>
+                        <label class="text-xs font-bold text-gray-600">সাইজ:</label>
+                        <select name="Size" id="prodSize" class="w-full p-2 border rounded"></select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold uppercase">Area (Delivery):</label>
-                        <select name="Area" id="area" onchange="calcBill()" class="w-full border-b border-gray-300 p-1 text-sm outline-none focus:border-black">
-                            <option value="80">Inside Dhaka (৳ 80)</option>
-                            <option value="150">Outside Dhaka (৳ 150)</option>
+                        <label class="text-xs font-bold text-gray-600">এলাকা:</label>
+                        <select id="area" onchange="calcBill()" class="w-full p-2 border rounded">
+                            <option value="80">ঢাকা (৳ ৮০)</option>
+                            <option value="150">ঢাকার বাইরে (৳ ১৫০)</option>
                         </select>
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-[10px] font-bold uppercase">Full Address:</label>
-                    <textarea name="Address" id="custAddr" required class="w-full border-b border-gray-300 p-1 text-sm outline-none focus:border-black" rows="1"></textarea>
+                    <label class="text-xs font-bold text-gray-600">ঠিকানা:</label>
+                    <textarea name="Address" id="custAddr" required class="w-full p-2 border rounded" rows="2"></textarea>
                 </div>
 
-                <div class="py-4 border-t border-black mt-4">
+                <div class="bg-yellow-50 p-4 rounded-lg border-2 border-dashed border-yellow-300">
                     <div class="flex justify-between font-bold text-lg">
-                        <span>Total Amount:</span>
-                        <span id="finalBill">৳ 0</span>
+                        <span>মোট বিল:</span>
+                        <span id="finalBill" class="text-red-600">৳ ০</span>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-black text-white py-3 font-bold uppercase tracking-widest hover:bg-gray-800 transition">Confirm Order</button>
+                <button type="submit" class="w-full gold-bg py-4 rounded-lg text-lg uppercase shadow-xl hover:brightness-110">অর্ডার কনফার্ম করুন</button>
             </form>
         </div>
     </div>
@@ -139,7 +140,7 @@
                     <div class="p-6 text-center">
                         <h3 class="text-xl font-bold mb-2">${p.name}</h3>
                         <p class="gold-text text-2xl font-bold mb-6">৳ ${p.price}</p>
-                        <button onclick="openModal('${p.name}', ${p.price}, '${p.category}')" class="gold-bg w-full py-3 rounded-full uppercase">অর্ডার করুন</button>
+                        <button onclick="openModal('${p.name}', ${p.price}, '${p.category}')" class="gold-bg w-full py-3 rounded-lg uppercase">অর্ডার করুন</button>
                     </div>
                 </div>
             `).join('');
@@ -166,21 +167,25 @@
 
         document.getElementById('orderForm').onsubmit = function(e) {
             const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const prod = document.getElementById('prodInput').value;
             const total = document.getElementById('finalBill').innerText;
 
-            // বিল ইমেজ জেনারেট এবং ডাউনলোড (সাদা পাতা)
+            // বিল ইমেজ জেনারেট এবং ডাউনলোড
             html2canvas(document.getElementById('billSection')).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Invoice-${name}.png`;
+                link.download = `StyleZone-Bill-${name}.png`;
                 link.href = canvas.toDataURL();
                 link.click();
             });
 
-            // কাস্টমারকে ধন্যবাদ জানানো (অটো মেইল সাবমিট হবে Formspree-তে)
-            alert("আপনার অর্ডারটি সফলভাবে নেওয়া হয়েছে এবং মেইল পাঠানো হয়েছে। বিল ডাউনলোড শুরু হয়েছে।");
+            // হোয়াটসঅ্যাপ মেসেজ
+            const msg = `নতুন অর্ডার!\nনাম: ${name}\nফোন: ${phone}\nপ্রোডাক্ট: ${prod}\nমোট বিল: ${total}`;
+            setTimeout(() => {
+                window.open(`https://wa.me/8801976978728?text=${encodeURIComponent(msg)}`, '_blank');
+            }, 1000);
         };
 
-        // রিয়েলটাইম সার্চ বার আপডেট
         function applyFilters() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             render(allProducts.filter(p => p.name.toLowerCase().includes(term)));
